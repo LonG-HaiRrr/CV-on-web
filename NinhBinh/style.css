@@ -1,0 +1,151 @@
+body {
+  margin: 0;
+  font-size: 5em;
+  background-image: url('img/bg.jpg');
+}
+
+.banner {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.banner::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url('img/valentin-petrov-m-mal-01.jpg');
+  background-size: cover;
+  background-position: center;
+  animation: bgZoomIn 4s ease-in-out 1 forwards;
+  z-index: -1;
+  pointer-events: none;
+}
+
+.banner::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url('img/after.png');
+  background-size: cover;
+  background-position: top;
+  transform: scale(2);
+  animation: bgZoomOut 4s ease-in-out 1 forwards;
+  z-index: -1;
+  pointer-events: none;
+}
+
+@keyframes bgZoomIn {
+  from { transform: scale(1.2); }
+  to   { transform: scale(1); }
+}
+
+@keyframes bgZoomOut {
+  from { transform: scale(1); }
+  to   { transform: scale(2); }
+}
+
+.title svg text {
+  stroke-dasharray: 400;
+  stroke-dashoffset: 400;
+  animation: textDraw 2.5s cubic-bezier(.77,0,.18,1) 1 forwards;
+  font-family: 'Reggae One', Arial, sans-serif; /* Đổi font ở đây nếu muốn */
+  font-size: 45px;
+  dominant-baseline: middle;
+}
+
+@keyframes textDraw {
+  0%   { stroke-dashoffset: 400; fill: transparent; }
+  80%  { fill: transparent; }
+  100% { stroke-dashoffset: 0; fill: #fff; }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+.main-nav {
+  position: absolute;
+  top: 0px;
+  right: 60px;
+  z-index: 10;
+  display: flex; /* Thiếu dòng này, cần bổ sung */
+  justify-content: space-between; /* Đẩy logo và menu về 2 phía */
+  align-items: center;  /* Căn giữa theo chiều dọc */
+  width: calc(100% - 120px); /* Đảm bảo thanh nav chiếm toàn chiều ngang */
+}
+
+.main-nav ul {
+  list-style: none;
+  display: flex;
+  gap: 32px; /*    khoảng cách giữa các thẻ li - */
+  margin: 0;
+  padding: 0;
+}
+
+.main-nav li {
+  opacity: 0;
+  transform: scale(0.5) translateY(-40px);
+  animation: nav-zoom-in 0.7s cubic-bezier(.77,0,.18,1) forwards;
+}
+
+.main-nav li:nth-child(1) { animation-delay: 1.4s; }
+.main-nav li:nth-child(2) { animation-delay: 1.7s; }
+.main-nav li:nth-child(3) { animation-delay: 2.0s; }
+.main-nav li:nth-child(4) { animation-delay: 2.3s; }
+.main-nav li:nth-child(5) { animation-delay: 2.6s; }
+
+@keyframes nav-zoom-in {
+  from {
+    opacity: 0;
+    transform: scale(0.5) translateY(-40px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.main-nav a {
+  color: #fff;
+  text-decoration: none;
+  font-size: 20px;
+  font-family: 'Reggae One', Arial, sans-serif;
+  transition: color .2s;
+}
+
+.main-nav a:hover {
+  color: #ffd700;
+}
+.main-nav .nav__logo:hover {
+  color: #0ad253;
+  cursor: pointer;
+}
+
+
+.nav__logo {
+  font-size: 2.6rem;
+  font-weight: 800;
+  letter-spacing: 1px;
+  color: #ffffff;
+  opacity: 0;
+  transform: scale(0.5) translateY(-40px);
+  animation: nav-zoom-in 0.7s cubic-bezier(.77,0,.18,1) forwards;
+  animation-delay: 2.6s;
+  text-decoration: none;
+  cursor: pointer;
+}
+.nav__logo .dot {
+  color: #a020f0;
+}
