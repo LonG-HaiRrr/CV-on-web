@@ -210,7 +210,12 @@ p { color: #bcbcbc; font-size: 1.1rem; margin-bottom: 25px; line-height: 1.6; te
 .cv-modal-overlay.show .cv-modal-content { transform: translateY(0); }
 .cv-modal-header { display: flex; justify-content: space-between; align-items: center; padding: 15px 25px; background: #161223; border-bottom: 1px solid #433b6f; }
 .cv-modal-title { color: #fff; font-size: 1.2rem; font-weight: 700; }
-.cv-modal-actions { display: flex; align-items: center; gap: 20px; }
+.cv-modal-actions { 
+  display: flex; 
+  align-items: center; 
+  gap: 20px; 
+  margin-left: auto; /* Thuộc tính cốt lõi để đẩy nút sang phải */
+}
 .cv-download-real-btn { padding: 8px 20px; font-size: 0.95rem; display: flex; align-items: center; gap: 8px; }
 .close-cv-btn { background: none; border: none; color: #fff; font-size: 2rem; cursor: pointer; transition: 0.3s; padding: 0; display: flex; align-items: center; }
 .close-cv-btn:hover { color: #ff4b69; transform: scale(1.1) rotate(90deg); }
