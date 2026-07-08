@@ -22,8 +22,7 @@
   <nav>
     <div class="nav__logo">Welcome<span class="dot">.</span></div>
     <ul class="nav__links">
-      <li><a href="#">Home</a></li>
-      <li><a href="NinhBinh">About</a></li> 
+      <li><a href="NinhBinh">About me</a></li> 
       
       <li class="dropdown">
         <a href="javascript:void(0)" id="servicesToggle">Services <i class="fa-solid fa-caret-down" style="font-size: 0.8em; margin-left: 4px;"></i></a>
@@ -57,7 +56,7 @@
           <button class="slider-arrow next-arrow"><i class="fa-solid fa-chevron-right"></i></button>
         </div>
       </li>
-      <li><a href="#">Contact Me</a></li>
+      <li><a href="#socialGroup" id="contactMeBtn">Contact Me</a></li>
     </ul>
   </nav>
 
@@ -78,10 +77,10 @@
         <a href="#" class="btn hire-btn">Hire Me</a>
         <a href="#" class="btn cv-btn" id="openCvModal">Vỉew My Cv</a>
       </div>
-      <div class="hero__social fade-in delay-4">
-        <a href="https://github.com/LonG-HaiRrr"  target="_blank"><i class="fa-brands fa-github"></i></a>
-        <a href="https://www.facebook.com/vietlong.04/" target="_blank"><i class="fa-brands fa-facebook"></i></a>
-        <a href="tel:0868698220 "><i class="fa-solid fa-phone"></i></a>
+      <div class="hero__social fade-in delay-4" id="socialGroup">
+        <a href="https://github.com/LonG-HaiRrr" target="_blank" class="social-icon"><i class="fa-brands fa-github"></i></a>
+        <a href="https://www.facebook.com/vietlong.04/" target="_blank" class="social-icon"><i class="fa-brands fa-facebook"></i></a>
+        <a href="tel:0868698220" class="social-icon"><i class="fa-solid fa-phone"></i></a>
       </div>
     </div>
     <div class="hero__image fade-in-right">
@@ -114,10 +113,11 @@
       </div>
       <div class="hire-form-container">
         <form id="hireForm">
-          <input type="text" class="input_order_form" id="hireName" placeholder="Tên của bạn (Bắt buộc) *" required>
-          <input type="tel" class="input_order_form"  id="hirePhone" placeholder="Số điện thoại (Bắt buộc) *" required>
-          <input type="text" class="input_order_form"  id="hireAddress" placeholder="Địa chỉ của bạn">
-          <textarea class="input_order_form"  id="hirePurpose" placeholder="Mục đích thuê / Yêu cầu chi tiết..." rows="4"></textarea>
+          <input type="text" class="input_order_form" id="hireName" placeholder="Tên của bạn (Bắt buộc) *" required oninvalid="this.setCustomValidity('Bạn phải điền tên của mình')" oninput="this.setCustomValidity('')">
+          <input type="tel" class="input_order_form" id="hirePhone" placeholder="Số điện thoại (Bắt buộc) *" required oninvalid="this.setCustomValidity('Bạn phải điền số điện thoại')" oninput="this.setCustomValidity('')">
+          <input type="email" class="input_order_form" id="hireEmail" placeholder="Email của bạn (Bắt buộc) *" required oninvalid="this.setCustomValidity('Bạn phải điền Email hợp lệ')" oninput="this.setCustomValidity('')">
+          <input type="text" class="input_order_form" id="hireAddress" placeholder="Địa chỉ của bạn">
+          <textarea class="input_order_form" id="hirePurpose" placeholder="Mục đích thuê / Yêu cầu chi tiết..." rows="4"></textarea>
           <button type="submit" class="btn submit-hire-btn">Gửi Yêu Cầu</button>
         </form>
       </div>

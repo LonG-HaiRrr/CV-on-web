@@ -38,7 +38,7 @@ window.addEventListener("DOMContentLoaded", () => {
   }
 
   // ==========================================
-  // THUẬT TOÁN 60FPS - KHÔNG BAO GIỜ KHỰNG & CÓ GRID VIEW
+  // THUẬT TOÁN 60FPS - CAROUSEL
   // ==========================================
   const cards = document.querySelectorAll('.service-card');
   let currentPos = 0;        
@@ -47,7 +47,6 @@ window.addEventListener("DOMContentLoaded", () => {
   let hoveredCardIndex = -1; 
   let hoverTimeouts = [];
 
-  // --- BIẾN CHO VUỐT ĐIỆN THOẠI (HIỆU ỨNG IPHONE) ---
   let isDragging = false;
   let startX = 0, lastX = 0, lastTime = 0;
   let momentum = 0;
@@ -74,7 +73,6 @@ window.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // --- XỬ LÝ SỰ KIỆN VUỐT TRÊN ĐIỆN THOẠI ---
   if (track) {
     track.addEventListener('touchstart', (e) => {
       if (isGridView) return;
@@ -126,20 +124,15 @@ window.addEventListener("DOMContentLoaded", () => {
       if (d < 0.05) isCenteredAndHovered = true; 
     }
 
-    // 1. Xử lý Trớn (Momentum) quay nhiều vòng khi vuốt mạnh
     if (Math.abs(momentum) > 0.001) {
       currentPos += momentum;
-      momentum *= 0.94; // Hệ số phanh trớn
+      momentum *= 0.94;
       targetPos = currentPos;
       isLocked = false; 
-    } 
-    // 2. Quay tự động bình thường
-    else if (!isLocked && !isCenteredAndHovered && !isDragging) {
+    } else if (!isLocked && !isCenteredAndHovered && !isDragging) {
       currentPos += autoSpinSpeed;
       targetPos = currentPos;
-    } 
-    // 3. Khóa vào thẻ (Lerp)
-    else if (isLocked && !isDragging) {
+    } else if (isLocked && !isDragging) {
       let diff = targetPos - currentPos;
       if (diff > cards.length / 2) diff -= cards.length;
       if (diff < -cards.length / 2) diff += cards.length;
@@ -169,47 +162,19 @@ window.addEventListener("DOMContentLoaded", () => {
 
       if (isMobile) {
         if (absOffset <= 1) {
-          x = absOffset * 65; 
-          scale = 0.95 - (absOffset * 0.45); 
-          opacity = 1 - (absOffset * 0.15); 
-          blur = 0; 
-          zIndex = 5 - absOffset;
+          x = absOffset * 65; scale = 0.95 - (absOffset * 0.45); opacity = 1 - (absOffset * 0.15); blur = 0; zIndex = 5 - absOffset;
         } else if (absOffset <= 2) {
-          let t = absOffset - 1;
-          x = 65 + (t * 40); 
-          scale = 0.5 - (t * 0.15); 
-          opacity = 0.85 - (t * 0.3);
-          blur = 0; 
-          zIndex = 4 - t;
+          let t = absOffset - 1; x = 65 + (t * 40); scale = 0.5 - (t * 0.15); opacity = 0.85 - (t * 0.3); blur = 0; zIndex = 4 - t;
         } else {
-          let t = Math.min(absOffset - 2, 1);
-          x = 105 + (t * 30);
-          scale = 0.35 - (t * 0.15);
-          opacity = 0.55 - (t * 0.55);
-          blur = 0;
-          zIndex = 3 - t;
+          let t = Math.min(absOffset - 2, 1); x = 105 + (t * 30); scale = 0.35 - (t * 0.15); opacity = 0.55 - (t * 0.55); blur = 0; zIndex = 3 - t;
         }
       } else {
         if (absOffset <= 1) {
-          x = absOffset * 110; 
-          scale = 1 - (absOffset * 0.2); 
-          opacity = 1 - (absOffset * 0.2); 
-          blur = absOffset * 1; 
-          zIndex = 5 - absOffset; 
+          x = absOffset * 110; scale = 1 - (absOffset * 0.2); opacity = 1 - (absOffset * 0.2); blur = absOffset * 1; zIndex = 5 - absOffset; 
         } else if (absOffset <= 2) {
-          let t = absOffset - 1; 
-          x = 110 + (t * 90); 
-          scale = 0.8 - (t * 0.2); 
-          opacity = 0.8 - (t * 0.3); 
-          blur = 1 + (t * 2); 
-          zIndex = 4 - t; 
+          let t = absOffset - 1; x = 110 + (t * 90); scale = 0.8 - (t * 0.2); opacity = 0.8 - (t * 0.3); blur = 1 + (t * 2); zIndex = 4 - t; 
         } else {
-          let t = Math.min(absOffset - 2, 1);
-          x = 200 + (t * 50); 
-          scale = 0.6 - (t * 0.2); 
-          opacity = 0.5 - (t * 0.5); 
-          blur = 3 + (t * 2);
-          zIndex = 3 - t;
+          let t = Math.min(absOffset - 2, 1); x = 200 + (t * 50); scale = 0.6 - (t * 0.2); opacity = 0.5 - (t * 0.5); blur = 3 + (t * 2); zIndex = 3 - t;
         }
       }
 
@@ -218,11 +183,8 @@ window.addEventListener("DOMContentLoaded", () => {
       card.style.filter = `blur(${blur}px)`;
       card.style.zIndex = Math.round(zIndex);
 
-      if (absOffset < 0.3 && isCenteredAndHovered && !isGridView) {
-         card.classList.add('active');
-      } else {
-         card.classList.remove('active');
-      }
+      if (absOffset < 0.3 && isCenteredAndHovered && !isGridView) { card.classList.add('active'); } 
+      else { card.classList.remove('active'); }
     });
 
     requestAnimationFrame(renderCarousel);
@@ -230,9 +192,6 @@ window.addEventListener("DOMContentLoaded", () => {
 
   requestAnimationFrame(renderCarousel);
 
-  // ==========================================
-  // XỬ LÝ HOVER 1.5s THÔNG MINH
-  // ==========================================
   cards.forEach((card, index) => {
     card.addEventListener('mouseenter', () => {
       hoveredCardIndex = index;
@@ -263,26 +222,39 @@ window.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  // ==========================================
-  // XỬ LÝ MŨI TÊN
-  // ==========================================
-  function moveNext() {
-    if (!isLocked) targetPos = Math.round(currentPos);
-    targetPos += 1;
-    isLocked = true;
-  }
-  function movePrev() {
-    if (!isLocked) targetPos = Math.round(currentPos);
-    targetPos -= 1;
-    isLocked = true;
-  }
+  function moveNext() { if (!isLocked) targetPos = Math.round(currentPos); targetPos += 1; isLocked = true; }
+  function movePrev() { if (!isLocked) targetPos = Math.round(currentPos); targetPos -= 1; isLocked = true; }
 
-  document.querySelector('.next-arrow').addEventListener('click', (e) => {
-    e.stopPropagation(); moveNext();
-  });
-  document.querySelector('.prev-arrow').addEventListener('click', (e) => {
-    e.stopPropagation(); movePrev();
-  });
+  document.querySelector('.next-arrow').addEventListener('click', (e) => { e.stopPropagation(); moveNext(); });
+  document.querySelector('.prev-arrow').addEventListener('click', (e) => { e.stopPropagation(); movePrev(); });
+
+  // ==========================================
+  // CLICK "CONTACT ME": TRƯỢT & LÓE SÁNG 
+  // ==========================================
+  const contactMeBtn = document.getElementById('contactMeBtn');
+  const socialGroup = document.getElementById('socialGroup');
+  const socialIcons = document.querySelectorAll('.social-icon');
+
+  if (contactMeBtn && socialGroup) {
+    contactMeBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      
+      // Trượt mượt xuống phần social
+      socialGroup.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      
+      // Chờ trượt xong (khoảng 600ms) rồi kích hoạt hiệu ứng kính sáng lần lượt
+      setTimeout(() => {
+        socialIcons.forEach((icon, index) => {
+          setTimeout(() => {
+            // Reset class để có thể lóe sáng nhiều lần khi bấm nhiều lần
+            icon.classList.remove('flash'); 
+            void icon.offsetWidth; // Trigger reflow
+            icon.classList.add('flash');
+          }, index * 200); // Mỗi nút lóe cách nhau 0.2s tạo hiệu ứng lướt ngang
+        });
+      }, 600);
+    });
+  }
 
   // ==========================================
   // XỬ LÝ SỰ KIỆN CHO MODAL CV
@@ -291,23 +263,12 @@ window.addEventListener("DOMContentLoaded", () => {
   const cvModal = document.getElementById('cvModal');
   const closeCvModalBtn = document.getElementById('closeCvModal');
 
-  if (openCvModalBtn && cvModal) {
-    openCvModalBtn.addEventListener('click', (e) => {
-      e.preventDefault(); 
-      cvModal.classList.add('show');
-    });
-  }
-  if (closeCvModalBtn) {
-    closeCvModalBtn.addEventListener('click', () => cvModal.classList.remove('show'));
-  }
-  if (cvModal) {
-    cvModal.addEventListener('click', (e) => {
-      if (e.target === cvModal) cvModal.classList.remove('show');
-    });
-  }
+  if (openCvModalBtn && cvModal) { openCvModalBtn.addEventListener('click', (e) => { e.preventDefault(); cvModal.classList.add('show'); }); }
+  if (closeCvModalBtn) { closeCvModalBtn.addEventListener('click', () => cvModal.classList.remove('show')); }
+  if (cvModal) { cvModal.addEventListener('click', (e) => { if (e.target === cvModal) cvModal.classList.remove('show'); }); }
 
   // ==========================================
-  // XỬ LÝ HIRE ME & GỬI THÔNG BÁO DISCORD
+  // XỬ LÝ HIRE ME & VALIDATION FORM
   // ==========================================
   const hireBtns = document.querySelectorAll('.hire-btn');
   const hireModal = document.getElementById('hireModal');
@@ -315,32 +276,42 @@ window.addEventListener("DOMContentLoaded", () => {
   const hireForm = document.getElementById('hireForm');
   const toastNotification = document.getElementById('toastNotification');
 
-  hireBtns.forEach(btn => {
-    btn.addEventListener('click', (e) => {
-      e.preventDefault();
-      hireModal.classList.add('show');
-    });
-  });
-
-  if (closeHireModal) {
-    closeHireModal.addEventListener('click', () => hireModal.classList.remove('show'));
-  }
-  if (hireModal) {
-    hireModal.addEventListener('click', (e) => {
-      if (e.target === hireModal) hireModal.classList.remove('show');
-    });
-  }
+  hireBtns.forEach(btn => { btn.addEventListener('click', (e) => { e.preventDefault(); hireModal.classList.add('show'); }); });
+  if (closeHireModal) { closeHireModal.addEventListener('click', () => hireModal.classList.remove('show')); }
+  if (hireModal) { hireModal.addEventListener('click', (e) => { if (e.target === hireModal) hireModal.classList.remove('show'); }); }
 
   if (hireForm) {
     hireForm.addEventListener('submit', (e) => {
       e.preventDefault();
       
-      const name = document.getElementById('hireName').value;
-      const phone = document.getElementById('hirePhone').value;
-      const address = document.getElementById('hireAddress').value;
-      const purpose = document.getElementById('hirePurpose').value;
+      const name = document.getElementById('hireName');
+      const phone = document.getElementById('hirePhone');
+      const email = document.getElementById('hireEmail');
+      const address = document.getElementById('hireAddress');
+      const purpose = document.getElementById('hirePurpose');
 
-      // 🛑 THAY LINK DISCORD WEBHOOK CỦA BẠN VÀO ĐÂY 🛑
+      // --- 1. VALIDATION SỐ ĐIỆN THOẠI BẰNG REGEX ---
+      // (Đầu số 03, 05, 07, 08, 09 hoặc 84 và tổng là 10-11 số)
+      const phoneRegex = /(84|0[3|5|7|8|9])+([0-9]{8})\b/g;
+      if (!phoneRegex.test(phone.value.trim())) {
+        phone.setCustomValidity('Số điện thoại không hợp lệ (Ví dụ: 098..., 038...)');
+        phone.reportValidity();
+        return; 
+      } else {
+        phone.setCustomValidity(''); 
+      }
+
+      // --- 2. VALIDATION EMAIL BẰNG REGEX ---
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email.value.trim())) {
+        email.setCustomValidity('Vui lòng nhập đúng định dạng Email (Ví dụ: abc@gmail.com)');
+        email.reportValidity();
+        return;
+      } else {
+        email.setCustomValidity('');
+      }
+
+      // Nếu đi qua hết các bài test, tiến hành gửi Form!
       const DISCORD_WEBHOOK_URL = 'https://discord.com/api/webhooks/1524383593789526158/I6xplG5Odx3ljG4Dg5ka1eAY9tBmtZV9KfupRSGRMBZg6zAfQh8lP_x34-CnptUgcJr_';
 
       const payload = {
@@ -348,22 +319,21 @@ window.addEventListener("DOMContentLoaded", () => {
         embeds: [{
           color: 65450,
           fields: [
-            { name: "👤 Khách hàng", value: name, inline: false },
-            { name: "📞 Điện thoại", value: phone, inline: false },
-            { name: "📍 Địa chỉ", value: address || "Không có", inline: false },
-            { name: "📝 Mục đích/Yêu cầu", value: purpose || "Không có", inline: false }
+            { name: "👤 Khách hàng", value: name.value, inline: false },
+            { name: "📞 Điện thoại", value: phone.value, inline: false },
+            { name: "📧 Email", value: email.value, inline: false },
+            { name: "📍 Địa chỉ", value: address.value || "Không có", inline: false },
+            { name: "📝 Mục đích/Yêu cầu", value: purpose.value || "Không có", inline: false }
           ],
           timestamp: new Date().toISOString()
         }]
       };
-
 
       fetch(DISCORD_WEBHOOK_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
       }).catch(error => console.error("Lỗi gửi Discord:", error));
-
 
       hireModal.classList.remove('show');
       hireForm.reset();

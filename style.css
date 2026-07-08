@@ -3,6 +3,7 @@
 body {
   margin: 0; font-family: 'Montserrat', sans-serif;
   background: transparent; color: #fff; overflow-x: hidden;
+  scroll-behavior: smooth; /* Trượt mượt cho toàn trang */
 }
 
 .bg-slider, .bg-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; }
@@ -34,20 +35,12 @@ nav { display: flex; justify-content: space-between; align-items: center; paddin
 }
 
 .service-card {
-  position: absolute;
-  width: 340px; height: 480px;
-  background: #252439; border-radius: 14px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  position: absolute; width: 340px; height: 480px;
+  background: #252439; border-radius: 14px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
   display: flex; flex-direction: column; overflow: hidden;
-  cursor: pointer; 
-  transition: translate 0.3s ease, box-shadow 0.3s ease; 
+  cursor: pointer; transition: translate 0.3s ease, box-shadow 0.3s ease; 
 }
-
-.service-card.active:hover {
-  translate: 0 -15px; 
-  box-shadow: 0 20px 50px rgba(0,0,0,0.8);
-}
-
+.service-card.active:hover { translate: 0 -15px; box-shadow: 0 20px 50px rgba(0,0,0,0.8); }
 .service-card img { width: 100%; height: 200px; object-fit: cover; }
 .service-card h3 { color: #ff4b69; margin: 20px 24px 5px; font-size: 1.8rem; transition: color 0.3s; }
 .service-card p { color: #d1d1d1; margin: 5px 24px 20px; font-size: 1rem; line-height: 1.5; flex-grow: 1; }
@@ -56,36 +49,27 @@ nav { display: flex; justify-content: space-between; align-items: center; paddin
   background: linear-gradient(90deg, #ff4b69, #00ffcc);
   color: #fff !important; border-radius: 25px;
   align-self: flex-start; font-weight: bold; font-size: 1rem;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-  cursor: pointer;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.3); cursor: pointer;
 }
-
 .service-card.active:hover h3 { color: #00ffcc; }
 
 .slider-arrow {
   position: absolute; top: 50%; transform: translateY(-50%);
   background: rgba(160, 32, 240, 0.4); color: white;
   border: 1px solid #a020f0; width: 60px; height: 60px;
-  border-radius: 50%; font-size: 1.5rem; cursor: pointer;
-  z-index: 100; transition: 0.3s;
+  border-radius: 50%; font-size: 1.5rem; cursor: pointer; z-index: 100; transition: 0.3s;
 }
 .slider-arrow:hover { background: #a020f0; transform: translateY(-50%) scale(1.1); }
-.prev-arrow { left: 8vw; }
-.next-arrow { right: 8vw; }
+.prev-arrow { left: 8vw; } .next-arrow { right: 8vw; }
 .slider-arrow.hidden { display: none; }
 
-/* =========================================
-   GIAO DIỆN NÚT GẠT & GRID VIEW (MENU PHIM)
-========================================= */
+/* GIAO DIỆN NÚT GẠT & GRID VIEW */
 .menu-controls {
   position: absolute; top: 20px; right: 5vw;
   display: flex; align-items: center; gap: 15px; z-index: 1000;
-  background: rgba(10, 8, 18, 0.85); 
-  padding: 10px 20px; border-radius: 30px;
-  backdrop-filter: blur(10px);
-  box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+  background: rgba(10, 8, 18, 0.85); padding: 10px 20px; border-radius: 30px;
+  backdrop-filter: blur(10px); box-shadow: 0 4px 15px rgba(0,0,0,0.5);
 }
-
 .close-menu { position: static !important; font-size: 2.2rem; color: #fff; background: none; border: none; cursor: pointer; transition: 0.3s; }
 .close-menu:hover { color: #ff4b69; transform: scale(1.1) rotate(90deg); }
 
@@ -97,33 +81,17 @@ input:checked + .slider { background-color: #a020f0; }
 input:checked + .slider:before { transform: translateX(20px); }
 .view-label { color: #fff; font-size: 0.95rem; font-weight: 700; cursor: pointer; user-select: none; }
 
-/* Ép khuôn Grid */
 .carousel-track.grid-view {
   position: absolute !important; top: 0 !important; left: 0 !important;
-  display: grid !important;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)) !important;
-  gap: 35px !important;
-  padding: 120px 6vw 80px !important; 
+  display: grid !important; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)) !important;
+  gap: 35px !important; padding: 120px 6vw 80px !important; 
   width: 100vw !important; height: 100vh !important;
   overflow-y: auto !important; overflow-x: hidden !important;
-  align-content: start !important;
-  box-sizing: border-box !important;
+  align-content: start !important; box-sizing: border-box !important;
 }
+.carousel-track.grid-view .service-card { position: relative !important; width: 100% !important; height: auto !important; min-height: 400px !important; margin-top: 150px !important; transform: none !important; opacity: 1 !important; filter: none !important; z-index: 1 !important; }
 
-/* Fix đè thẻ */
-.carousel-track.grid-view .service-card {
-  position: relative !important; 
-  width: 100% !important; 
-  height: auto !important; 
-  min-height: 400px !important;
-  margin-top: 150px !important;
-  transform: none !important; 
-  opacity: 1 !important; 
-  filter: none !important; 
-  z-index: 1 !important;
-}
-
-/* ------ BỐ CỤC HERO CHÍNH ------ */
+/* BỐ CỤC HERO CHÍNH */
 .hero { min-height: 80vh; display: flex; align-items: center; padding: 40px 6vw; justify-content: space-between; gap: 40px; }
 .hero__content { max-width: 55%; z-index: 1; }
 .hero__name {
@@ -143,11 +111,7 @@ p { color: #bcbcbc; font-size: 1.1rem; margin-bottom: 25px; line-height: 1.6; te
 .tech-stack { margin-bottom: 30px; display: flex; flex-direction: column; gap: 10px; }
 .tech-title { font-weight: 700; color: #a020f0; font-size: 1.1rem; }
 .tech-tags { display: flex; flex-wrap: wrap; gap: 10px; }
-.tech-tags span {
-  background: #211b38; border: 1px solid #433b6f; color: #eee;
-  padding: 6px 14px; border-radius: 20px; font-size: 0.9rem; font-weight: 700;
-  transition: 0.3s; cursor: default;
-}
+.tech-tags span { background: #211b38; border: 1px solid #433b6f; color: #eee; padding: 6px 14px; border-radius: 20px; font-size: 0.9rem; font-weight: 700; transition: 0.3s; cursor: default; }
 .tech-tags span:hover { border-color: #a020f0; box-shadow: 0 0 15px #a020f055; transform: translateY(-2px); }
 
 .hero__btns { margin-bottom: 22px; display: flex; gap: 1.2em; }
@@ -156,9 +120,33 @@ p { color: #bcbcbc; font-size: 1.1rem; margin-bottom: 25px; line-height: 1.6; te
 .btn.cv-btn:hover { background: #a020f0; color: #fff; }
 .btn.hire-btn:hover { filter: brightness(1.13); box-shadow: 0 2px 24px #a020f077; }
 
-.hero__social { display: flex; gap: 20px; }
-.hero__social a { color: #aaa; font-size: 1.45rem; background: #211b38; border-radius: 50%; padding: 0.6em; border: 1.5px solid #433b6f; transition: 0.2s; display: flex; align-items: center; justify-content: center; }
-.hero__social a:hover { color: #a020f0; border-color: #a020f0; }
+/* =========================================
+   HIỆU ỨNG LÓE SÁNG CHO MẠNG XÃ HỘI
+========================================= */
+.hero__social { display: flex; gap: 20px; padding: 10px 0; }
+.social-icon { 
+  color: #aaa; font-size: 1.45rem; background: #211b38; border-radius: 50%; 
+  padding: 0.6em; border: 1.5px solid #433b6f; transition: 0.2s; 
+  display: flex; align-items: center; justify-content: center;
+  position: relative; overflow: hidden; /* Cần thiết cho hiệu ứng lóe */
+}
+.social-icon:hover { color: #a020f0; border-color: #a020f0; box-shadow: 0 0 15px rgba(160, 32, 240, 0.5); }
+
+/* Vệt sáng chạy ngang mờ ảo */
+.social-icon::after {
+  content: ''; position: absolute;
+  top: 0; left: -150%; width: 50%; height: 100%;
+  background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.7) 50%, rgba(255,255,255,0) 100%);
+  transform: skewX(-25deg);
+}
+/* Kích hoạt animation khi được gọi class flash */
+.social-icon.flash::after {
+  animation: shineGlass 0.7s ease-out;
+}
+@keyframes shineGlass {
+  0% { left: -150%; }
+  100% { left: 200%; }
+}
 
 .hero__image { width: 45%; display: flex; justify-content: flex-end;}
 .hero__image img { width: 100%; max-width: 480px; aspect-ratio: 1/1; object-fit: cover; border-radius: 50%; border: 7px solid #a020f0; box-shadow: 0 0 48px #a020f055; transition: transform .5s; }
@@ -173,8 +161,7 @@ p { color: #bcbcbc; font-size: 1.1rem; margin-bottom: 25px; line-height: 1.6; te
 /* ------ GIAO DIỆN RESPONSIVE ------ */
 @media (max-width: 1200px) {
   .hero__name { font-size: 3.8rem; } h1 { font-size: 2.5rem; } h2 { font-size: 1.4rem; }
-  .hero__image img { max-width: 380px; }
-  .service-card { width: 300px; height: 440px; } 
+  .hero__image img { max-width: 380px; } .service-card { width: 300px; height: 440px; } 
 }
 @media (max-width: 992px) {
   nav { padding: 20px 4vw 0; }
@@ -182,8 +169,7 @@ p { color: #bcbcbc; font-size: 1.1rem; margin-bottom: 25px; line-height: 1.6; te
   .hero__content { max-width: 90%; } .hero__image { width: 100%; justify-content: center; } .hero__image img { max-width: 320px; }
   p { text-align: center; margin: 0 auto 25px auto; max-width: 700px;}
   .tech-stack { align-items: center; } .tech-tags { justify-content: center; } .hero__btns, .hero__social { justify-content: center; }
-  .service-card { width: 260px; height: 380px; }
-  .service-card h3 { font-size: 1.5rem; margin: 15px 15px 5px; } .service-card p { font-size: 0.9rem; margin: 5px 15px 15px; }
+  .service-card { width: 260px; height: 380px; } .service-card h3 { font-size: 1.5rem; margin: 15px 15px 5px; } .service-card p { font-size: 0.9rem; margin: 5px 15px 15px; }
   .read-more { margin: 0 15px 15px 15px; padding: 8px 20px; }
   .slider-arrow { width: 50px; height: 50px; } .prev-arrow { left: 4vw; } .next-arrow { right: 4vw; }
 }
@@ -192,10 +178,7 @@ p { color: #bcbcbc; font-size: 1.1rem; margin-bottom: 25px; line-height: 1.6; te
   .hero__image img { max-width: 260px; } .hero__content { max-width: 100%; }
   nav { flex-direction: column; gap: 15px; } .nav__links { gap: 1.5rem; flex-wrap: wrap; justify-content: center; }
   .service-card { width: 220px; height: 340px; } .service-card img { height: 140px; }
-  
-  .menu-controls { top: 15px; right: 4vw; gap: 10px; padding: 8px 15px; }
-  .close-menu { font-size: 1.8rem !important; }
-  .view-label { font-size: 0.8rem; }
+  .menu-controls { top: 15px; right: 4vw; gap: 10px; padding: 8px 15px; } .close-menu { font-size: 1.8rem !important; } .view-label { font-size: 0.8rem; }
   .carousel-track.grid-view { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)) !important; padding: 100px 4vw 50px !important; gap: 20px !important; }
   .carousel-track.grid-view .service-card { min-height: 320px !important; }
 }
@@ -203,124 +186,48 @@ p { color: #bcbcbc; font-size: 1.1rem; margin-bottom: 25px; line-height: 1.6; te
   .hero { padding-top: 20px; } .hero__name { font-size: 2.5rem; padding-bottom: 10px; }
   h1 { font-size: 1.8rem; } h2 { font-size: 1.1rem; margin-bottom: 10px; }
   p { font-size: 0.95rem; margin-bottom: 20px; } .hero__image img { max-width: 220px; border-width: 5px; }
-  .nav__links { gap: 1rem; font-size: 1rem; } .btn { padding: 10px 24px; font-size: 0.9rem; } .hero__social a { font-size: 1.2rem; padding: 0.5em; }
+  .nav__links { gap: 1rem; font-size: 1rem; } .btn { padding: 10px 24px; font-size: 0.9rem; } .social-icon { font-size: 1.2rem; padding: 0.5em; }
   .service-card { width: 200px; height: 300px; border-radius: 10px; }
   .service-card h3 { font-size: 1.2rem; margin: 10px 15px 5px;} .service-card p { font-size: 0.8rem; margin: 5px 15px 10px;}
   .read-more { font-size: 0.8rem; padding: 6px 16px; margin-bottom: 10px;}
   .slider-arrow { width: 40px; height: 40px; font-size: 1.2rem; } .prev-arrow { left: 2vw; } .next-arrow { right: 2vw; }
 }
 
-/* =========================================
-   CSS CHO MODAL CV (DROP BOX)
-========================================= */
+/* CSS CHO MODAL CV & FORM */
 .cv-modal-overlay {
   position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-  background: rgba(10, 8, 18, 0.85); 
-  backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+  background: rgba(10, 8, 18, 0.85); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
   display: flex; align-items: center; justify-content: center;
-  opacity: 0; visibility: hidden;
-  transition: all 0.4s ease-in-out; 
-  z-index: 9999;
+  opacity: 0; visibility: hidden; transition: all 0.4s ease-in-out; z-index: 9999;
 }
-
-.cv-modal-overlay.show { 
-  opacity: 1; visibility: visible; 
-}
-
+.cv-modal-overlay.show { opacity: 1; visibility: visible; }
 .cv-modal-content {
-  width: 90%; height: 90%;
-  background: #211b38; border-radius: 14px;
+  width: 90%; height: 90%; background: #211b38; border-radius: 14px;
   display: flex; flex-direction: column; overflow: hidden;
-  box-shadow: 0 10px 40px rgba(0,0,0,0.8);
-  border: 1px solid #433b6f;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.8); border: 1px solid #433b6f;
   transform: translateY(30px); transition: transform 0.4s ease;
 }
-
-.cv-modal-overlay.show .cv-modal-content { 
-  transform: translateY(0); 
-}
-
-.cv-modal-header {
-  display: flex; justify-content: space-between; align-items: center;
-  padding: 15px 25px; background: #161223; border-bottom: 1px solid #433b6f;
-}
-
+.cv-modal-overlay.show .cv-modal-content { transform: translateY(0); }
+.cv-modal-header { display: flex; justify-content: space-between; align-items: center; padding: 15px 25px; background: #161223; border-bottom: 1px solid #433b6f; }
 .cv-modal-title { color: #fff; font-size: 1.2rem; font-weight: 700; }
 .cv-modal-actions { display: flex; align-items: center; gap: 20px; }
-
-.cv-download-real-btn {
-  padding: 8px 20px; font-size: 0.95rem; display: flex; align-items: center; gap: 8px;
-}
-
-.close-cv-btn {
-  background: none; border: none; color: #fff; font-size: 2rem;
-  cursor: pointer; transition: 0.3s; padding: 0; display: flex; align-items: center;
-}
-
+.cv-download-real-btn { padding: 8px 20px; font-size: 0.95rem; display: flex; align-items: center; gap: 8px; }
+.close-cv-btn { background: none; border: none; color: #fff; font-size: 2rem; cursor: pointer; transition: 0.3s; padding: 0; display: flex; align-items: center; }
 .close-cv-btn:hover { color: #ff4b69; transform: scale(1.1) rotate(90deg); }
-
-.cv-modal-content iframe {
-  width: 100%; flex-grow: 1; border: none; background: #fff;
-}
-
+.cv-modal-content iframe { width: 100%; flex-grow: 1; border: none; background: #fff; }
+@media (max-width: 768px) { .cv-modal-content { width: 95%; height: 95%; } .cv-modal-title { display: none; } }
+@media (min-width: 769px) { .cv-download-real-btn { display: none !important; } }
 @media (max-width: 768px) {
-  .cv-modal-content { width: 95%; height: 95%; }
-  .cv-modal-title { display: none; }
+  .cv-download-real-btn { background: linear-gradient(92deg, #00ffcc, #00aaff); color: #161223 !important; border-radius: 20px; font-weight: 800; box-shadow: 0 4px 15px rgba(0, 255, 204, 0.4); border: none; padding: 8px 18px; font-size: 0.9rem; transition: transform 0.2s, filter 0.2s; }
+  .cv-download-real-btn:active { transform: scale(0.92); filter: brightness(1.2); }
 }
 
-/* =========================================
-   1. CHỈNH SỬA NÚT TẢI CV
-========================================= */
-@media (min-width: 769px) {
-  .cv-download-real-btn {
-    display: none !important;
-  }
-}
+.hire-modal-content { width: 90%; max-width: 450px; height: auto; }
+.hire-form-container { padding: 25px; display: flex; flex-direction: column; gap: 15px; }
+.hire-form-container input, .hire-form-container textarea { width: 100%; padding: 14px 15px; border-radius: 8px; border: 1px solid #433b6f; background: #161223; color: #fff; font-family: inherit; font-size: 0.95rem; box-sizing: border-box; transition: 0.3s; margin-bottom: 0px; }
+.hire-form-container input:focus, .hire-form-container textarea:focus { outline: none; border-color: #a020f0; box-shadow: 0 0 12px rgba(160, 32, 240, 0.5); }
+.submit-hire-btn { width: 100%; margin-top: 10px; cursor: pointer; font-size: 1rem; }
 
-@media (max-width: 768px) {
-  .cv-download-real-btn {
-    background: linear-gradient(92deg, #00ffcc, #00aaff);
-    color: #161223 !important;
-    border-radius: 20px;
-    font-weight: 800;
-    box-shadow: 0 4px 15px rgba(0, 255, 204, 0.4);
-    border: none;
-    padding: 8px 18px;
-    font-size: 0.9rem;
-    transition: transform 0.2s, filter 0.2s;
-  }
-  .cv-download-real-btn:active {
-    transform: scale(0.92);
-    filter: brightness(1.2);
-  }
-}
-
-/* =========================================
-   2. GIAO DIỆN HIRE ME FORM
-========================================= */
-.hire-modal-content {
-  width: 90%; max-width: 450px; height: auto;
-}
-.hire-form-container {
-  padding: 25px; display: flex; flex-direction: column; gap: 15px;
-}
-.hire-form-container input, 
-.hire-form-container textarea {
-  width: 100%; padding: 14px 15px; border-radius: 8px;
-  border: 1px solid #433b6f; background: #161223; color: #fff;
-  font-family: inherit; font-size: 0.95rem; box-sizing: border-box;
-  transition: 0.3s;
-}
-.hire-form-container input:focus, 
-.hire-form-container textarea:focus {
-  outline: none; border-color: #a020f0;
-  box-shadow: 0 0 12px rgba(160, 32, 240, 0.5);
-}
-.submit-hire-btn { width: 50%; margin-top: 10px; cursor: pointer; font-size: 1rem; }
-
-/* =========================================
-   3. TOAST NOTIFICATION
-========================================= */
 .toast-notification {
   position: fixed; top: 25px; right: -400px;
   background: rgba(10, 8, 18, 0.95); backdrop-filter: blur(10px);
@@ -333,5 +240,5 @@ p { color: #bcbcbc; font-size: 1.1rem; margin-bottom: 25px; line-height: 1.6; te
 .toast-content i { color: #00ffcc; font-size: 1.6rem; }
 
 .input_order_form{
-  margin-bottom: 15px;
+  margin-bottom: 15px !important;
 }
