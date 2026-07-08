@@ -44,19 +44,23 @@ window.addEventListener("DOMContentLoaded", () => {
   let currentPos = 0;        
   let targetPos = 0;         
   let isLocked = false;      
-  let hoveredCardIndex = -1; // Lưu vị trí thẻ đang được trỏ chuột
+  let hoveredCardIndex = -1; 
   let hoverTimeouts = [];
 
-  const autoSpinSpeed = 0.0012; // Tốc độ trôi tự do
-  const maxSpinSpeed = 0.04;    // Giới hạn vận tốc: Chống xoay giật cục
-  const lerpFactor = 0.03;      // Gia tốc bám đích
+  // --- BIẾN CHO VUỐT ĐIỆN THOẠI (HIỆU ỨNG IPHONE) ---
+  let isDragging = false;
+  let startX = 0, lastX = 0, lastTime = 0;
+  let momentum = 0;
+
+  const autoSpinSpeed = 0.0012; 
+  const maxSpinSpeed = 0.04;    
+  const lerpFactor = 0.03;      
 
   const viewToggle = document.getElementById('viewToggle');
   const track = document.querySelector('.carousel-track');
   const arrows = document.querySelectorAll('.slider-arrow');
   let isGridView = false;
 
-  // Lắng nghe sự kiện chuyển đổi Grid View
   if (viewToggle) {
     viewToggle.addEventListener('change', (e) => {
       isGridView = e.target.checked;
@@ -70,8 +74,39 @@ window.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  // --- XỬ LÝ SỰ KIỆN VUỐT TRÊN ĐIỆN THOẠI ---
+  if (track) {
+    track.addEventListener('touchstart', (e) => {
+      if (isGridView) return;
+      isDragging = true; isLocked = false;
+      startX = e.touches[0].clientX;
+      lastX = startX; lastTime = Date.now();
+      momentum = 0; 
+    }, {passive: true});
+
+    track.addEventListener('touchmove', (e) => {
+      if (!isDragging || isGridView) return;
+      let currentX = e.touches[0].clientX;
+      let deltaX = currentX - lastX;
+      
+      currentPos -= deltaX * 0.015; 
+      
+      let now = Date.now();
+      let dt = now - lastTime;
+      if (dt > 0) {
+        momentum = -(deltaX / dt) * 0.5; 
+      }
+      
+      lastX = currentX; lastTime = now;
+    }, {passive: true});
+
+    track.addEventListener('touchend', () => {
+      if (isGridView) return;
+      isDragging = false;
+    });
+  }
+
   function renderCarousel() {
-    // Nếu bật Grid View, vô hiệu hóa toàn bộ CSS nội tuyến 3D
     if (isGridView) {
       cards.forEach(card => {
         card.style.transform = ''; card.style.opacity = '';
@@ -91,13 +126,21 @@ window.addEventListener("DOMContentLoaded", () => {
       if (d < 0.05) isCenteredAndHovered = true; 
     }
 
-    if (!isLocked && !isCenteredAndHovered) {
+    // 1. Xử lý Trớn (Momentum) quay nhiều vòng khi vuốt mạnh
+    if (Math.abs(momentum) > 0.001) {
+      currentPos += momentum;
+      momentum *= 0.94; // Hệ số phanh trớn
+      targetPos = currentPos;
+      isLocked = false; 
+    } 
+    // 2. Quay tự động bình thường
+    else if (!isLocked && !isCenteredAndHovered && !isDragging) {
       currentPos += autoSpinSpeed;
       targetPos = currentPos;
     } 
-    else if (isLocked) {
+    // 3. Khóa vào thẻ (Lerp)
+    else if (isLocked && !isDragging) {
       let diff = targetPos - currentPos;
-      
       if (diff > cards.length / 2) diff -= cards.length;
       if (diff < -cards.length / 2) diff += cards.length;
 
@@ -106,7 +149,6 @@ window.addEventListener("DOMContentLoaded", () => {
       if (step < -maxSpinSpeed) step = -maxSpinSpeed;
 
       currentPos += step;
-
       if (Math.abs(diff) < 0.005) {
         currentPos = targetPos; 
         isLocked = false;
@@ -126,19 +168,18 @@ window.addEventListener("DOMContentLoaded", () => {
       let x = 0, scale = 1, opacity = 1, blur = 0, zIndex = 5;
 
       if (isMobile) {
-        // --- CÔNG THỨC THU GỌN VÀ HIỂN THỊ ĐỦ 5 THẺ (MOBILE) ---
         if (absOffset <= 1) {
           x = absOffset * 65; 
           scale = 0.95 - (absOffset * 0.45); 
           opacity = 1 - (absOffset * 0.15); 
-          blur = 0; // Xóa mờ
+          blur = 0; 
           zIndex = 5 - absOffset;
         } else if (absOffset <= 2) {
           let t = absOffset - 1;
           x = 65 + (t * 40); 
           scale = 0.5 - (t * 0.15); 
           opacity = 0.85 - (t * 0.3);
-          blur = 0; // Xóa mờ
+          blur = 0; 
           zIndex = 4 - t;
         } else {
           let t = Math.min(absOffset - 2, 1);
@@ -149,7 +190,6 @@ window.addEventListener("DOMContentLoaded", () => {
           zIndex = 3 - t;
         }
       } else {
-        // --- CÔNG THỨC CHUẨN (LAPTOP) ---
         if (absOffset <= 1) {
           x = absOffset * 110; 
           scale = 1 - (absOffset * 0.2); 
@@ -196,7 +236,6 @@ window.addEventListener("DOMContentLoaded", () => {
   cards.forEach((card, index) => {
     card.addEventListener('mouseenter', () => {
       hoveredCardIndex = index;
-      
       hoverTimeouts.forEach(clearTimeout);
       hoverTimeouts = [];
 
@@ -254,23 +293,85 @@ window.addEventListener("DOMContentLoaded", () => {
 
   if (openCvModalBtn && cvModal) {
     openCvModalBtn.addEventListener('click', (e) => {
-      e.preventDefault(); // Ngăn trình duyệt nhảy về đầu trang
+      e.preventDefault(); 
       cvModal.classList.add('show');
     });
   }
-
   if (closeCvModalBtn) {
-    closeCvModalBtn.addEventListener('click', () => {
-      cvModal.classList.remove('show');
+    closeCvModalBtn.addEventListener('click', () => cvModal.classList.remove('show'));
+  }
+  if (cvModal) {
+    cvModal.addEventListener('click', (e) => {
+      if (e.target === cvModal) cvModal.classList.remove('show');
     });
   }
 
-  // Đóng modal khi click ra vùng đen bên ngoài
-  if (cvModal) {
-    cvModal.addEventListener('click', (e) => {
-      if (e.target === cvModal) {
-        cvModal.classList.remove('show');
-      }
+  // ==========================================
+  // XỬ LÝ HIRE ME & GỬI THÔNG BÁO DISCORD
+  // ==========================================
+  const hireBtns = document.querySelectorAll('.hire-btn');
+  const hireModal = document.getElementById('hireModal');
+  const closeHireModal = document.getElementById('closeHireModal');
+  const hireForm = document.getElementById('hireForm');
+  const toastNotification = document.getElementById('toastNotification');
+
+  hireBtns.forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      hireModal.classList.add('show');
+    });
+  });
+
+  if (closeHireModal) {
+    closeHireModal.addEventListener('click', () => hireModal.classList.remove('show'));
+  }
+  if (hireModal) {
+    hireModal.addEventListener('click', (e) => {
+      if (e.target === hireModal) hireModal.classList.remove('show');
+    });
+  }
+
+  if (hireForm) {
+    hireForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      
+      const name = document.getElementById('hireName').value;
+      const phone = document.getElementById('hirePhone').value;
+      const address = document.getElementById('hireAddress').value;
+      const purpose = document.getElementById('hirePurpose').value;
+
+      // 🛑 THAY LINK DISCORD WEBHOOK CỦA BẠN VÀO ĐÂY 🛑
+      const DISCORD_WEBHOOK_URL = 'https://discord.com/api/webhooks/1524383593789526158/I6xplG5Odx3ljG4Dg5ka1eAY9tBmtZV9KfupRSGRMBZg6zAfQh8lP_x34-CnptUgcJr_';
+
+      const payload = {
+        content: "🔔 **BẠN CÓ YÊU CẦU THUÊ DỊCH VỤ MỚI!**",
+        embeds: [{
+          color: 65450,
+          fields: [
+            { name: "👤 Khách hàng", value: name, inline: false },
+            { name: "📞 Điện thoại", value: phone, inline: false },
+            { name: "📍 Địa chỉ", value: address || "Không có", inline: false },
+            { name: "📝 Mục đích/Yêu cầu", value: purpose || "Không có", inline: false }
+          ],
+          timestamp: new Date().toISOString()
+        }]
+      };
+
+
+      fetch(DISCORD_WEBHOOK_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      }).catch(error => console.error("Lỗi gửi Discord:", error));
+
+
+      hireModal.classList.remove('show');
+      hireForm.reset();
+      toastNotification.classList.add('show');
+      
+      setTimeout(() => {
+        toastNotification.classList.remove('show');
+      }, 4000);
     });
   }
 });

@@ -106,6 +106,31 @@
     </div>
   </div>
 
+  <div class="cv-modal-overlay" id="hireModal">
+    <div class="cv-modal-content hire-modal-content">
+      <div class="cv-modal-header">
+        <span class="cv-modal-title">Liên Hệ Đặt Hàng</span>
+        <button class="close-cv-btn" id="closeHireModal"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div class="hire-form-container">
+        <form id="hireForm">
+          <input type="text" class="input_order_form" id="hireName" placeholder="Tên của bạn (Bắt buộc) *" required>
+          <input type="tel" class="input_order_form"  id="hirePhone" placeholder="Số điện thoại (Bắt buộc) *" required>
+          <input type="text" class="input_order_form"  id="hireAddress" placeholder="Địa chỉ của bạn">
+          <textarea class="input_order_form"  id="hirePurpose" placeholder="Mục đích thuê / Yêu cầu chi tiết..." rows="4"></textarea>
+          <button type="submit" class="btn submit-hire-btn">Gửi Yêu Cầu</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div id="toastNotification" class="toast-notification">
+    <div class="toast-content">
+      <i class="fa-solid fa-circle-check"></i>
+      <span>Đã gửi thông tin thành công!</span>
+    </div>
+  </div>
+
   <script src="https://kit.fontawesome.com/5fe94cd70e.js" crossorigin="anonymous"></script> 
   <script src="script.js"></script>
 </body>
