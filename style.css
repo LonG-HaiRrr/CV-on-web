@@ -27,13 +27,6 @@ nav { display: flex; justify-content: space-between; align-items: center; paddin
 }
 .mega-dropdown.show { opacity: 1; visibility: visible; }
 
-.close-menu {
-  position: absolute; top: 40px; right: 5vw;
-  font-size: 2.5rem; color: #fff; background: none; border: none;
-  cursor: pointer; z-index: 1000; transition: 0.3s;
-}
-.close-menu:hover { color: #ff4b69; transform: scale(1.1) rotate(90deg); }
-
 .carousel-track {
   position: relative; width: 100%; height: 100%;
   display: flex; align-items: center; justify-content: center;
@@ -46,6 +39,7 @@ nav { display: flex; justify-content: space-between; align-items: center; paddin
   background: #252439; border-radius: 14px;
   box-shadow: 0 10px 30px rgba(0,0,0,0.5);
   display: flex; flex-direction: column; overflow: hidden;
+  cursor: pointer; /* THÊM CON TRỎ BÀN TAY KHI HOVER VÀO THẺ */
   
   /* CHỈ transition translate và box-shadow để không cản trở JS */
   transition: translate 0.3s ease, box-shadow 0.3s ease; 
@@ -57,7 +51,6 @@ nav { display: flex; justify-content: space-between; align-items: center; paddin
   box-shadow: 0 20px 50px rgba(0,0,0,0.8);
 }
 
-
 .service-card img { width: 100%; height: 200px; object-fit: cover; }
 .service-card h3 { color: #ff4b69; margin: 20px 24px 5px; font-size: 1.8rem; transition: color 0.3s; }
 .service-card p { color: #d1d1d1; margin: 5px 24px 20px; font-size: 1rem; line-height: 1.5; flex-grow: 1; }
@@ -67,8 +60,8 @@ nav { display: flex; justify-content: space-between; align-items: center; paddin
   color: #fff !important; border-radius: 25px;
   align-self: flex-start; font-weight: bold; font-size: 1rem;
   box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+  cursor: pointer;
 }
-
 
 .service-card.active:hover h3 { color: #00ffcc; }
 
@@ -82,11 +75,60 @@ nav { display: flex; justify-content: space-between; align-items: center; paddin
 .slider-arrow:hover { background: #a020f0; transform: translateY(-50%) scale(1.1); }
 .prev-arrow { left: 8vw; }
 .next-arrow { right: 8vw; }
+.slider-arrow.hidden { display: none; }
+
+/* =========================================
+   GIAO DIỆN NÚT GẠT & GRID VIEW (MENU PHIM)
+========================================= */
+.menu-controls {
+  position: absolute; top: 20px; right: 5vw;
+  display: flex; align-items: center; gap: 15px; z-index: 1000;
+  background: rgba(10, 8, 18, 0.85); 
+  padding: 10px 20px; border-radius: 30px;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+}
+
+.close-menu { position: static !important; font-size: 2.2rem; color: #fff; background: none; border: none; cursor: pointer; transition: 0.3s; }
+.close-menu:hover { color: #ff4b69; transform: scale(1.1) rotate(90deg); }
+
+.view-switch { position: relative; display: inline-block; width: 46px; height: 24px; margin: 0; }
+.view-switch input { opacity: 0; width: 0; height: 0; }
+.slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #211b38; transition: .4s; border-radius: 34px; border: 1px solid #433b6f; }
+.slider:before { position: absolute; content: ""; height: 16px; width: 16px; left: 4px; bottom: 3px; background-color: #fff; transition: .4s; border-radius: 50%; }
+input:checked + .slider { background-color: #a020f0; }
+input:checked + .slider:before { transform: translateX(20px); }
+.view-label { color: #fff; font-size: 0.95rem; font-weight: 700; cursor: pointer; user-select: none; }
+
+/* Ép khuôn Grid: Tách khỏi Flexbox cha để không bị lỗi tràn */
+.carousel-track.grid-view {
+  position: absolute !important; top: 0 !important; left: 0 !important;
+  display: grid !important;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)) !important;
+  gap: 35px !important;
+  padding: 120px 6vw 80px !important; 
+  width: 100vw !important; height: 100vh !important;
+  overflow-y: auto !important; overflow-x: hidden !important;
+  align-content: start !important;
+  box-sizing: border-box !important;
+}
+
+/* Fix đè thẻ: Bắt buộc đổi sang Relative */
+.carousel-track.grid-view .service-card {
+  position: relative !important; 
+  width: 100% !important; 
+  height: auto !important; 
+  min-height: 400px !important;
+  margin-top: 150px !important;
+  transform: none !important; 
+  opacity: 1 !important; 
+  filter: none !important; 
+  z-index: 1 !important;
+}
 
 /* ------ BỐ CỤC HERO CHÍNH ------ */
 .hero { min-height: 80vh; display: flex; align-items: center; padding: 40px 6vw; justify-content: space-between; gap: 40px; }
 .hero__content { max-width: 55%; z-index: 1; }
-
 .hero__name {
   font-size: 4.8rem; font-weight: 800;
   background: linear-gradient(135deg, #ff0055, #0033ff, #00ffcc, #ffcc00, #9900ff, #ff00a1, #00ff55);
@@ -96,7 +138,6 @@ nav { display: flex; justify-content: space-between; align-items: center; paddin
 }
 @keyframes inkSpread { 0% { background-position: 0% 0%; } 50% { background-position: 100% 100%; } 100% { background-position: 0% 0%; } }
 .hero__name:hover { animation: none; background: none; -webkit-text-fill-color: #fff; color: #fff; filter: none; text-shadow: 0 0 40px #a020f0; }
-
 h1 { font-size: 3rem; margin: 0 0 12px 0; font-weight: 800; line-height: 1.1; }
 h2 { font-size: 1.6rem; margin: 0 0 14px 0; line-height: 1.3; }
 .highlight { color: #a020f0; font-weight: 800; }
@@ -123,10 +164,7 @@ p { color: #bcbcbc; font-size: 1.1rem; margin-bottom: 25px; line-height: 1.6; te
 .hero__social a:hover { color: #a020f0; border-color: #a020f0; }
 
 .hero__image { width: 45%; display: flex; justify-content: flex-end;}
-.hero__image img { 
-  width: 100%; max-width: 480px; aspect-ratio: 1/1; object-fit: cover; border-radius: 50%; 
-  border: 7px solid #a020f0; box-shadow: 0 0 48px #a020f055; transition: transform .5s; 
-}
+.hero__image img { width: 100%; max-width: 480px; aspect-ratio: 1/1; object-fit: cover; border-radius: 50%; border: 7px solid #a020f0; box-shadow: 0 0 48px #a020f055; transition: transform .5s; }
 .hero__image img:hover { transform: scale(1.04) rotate(-2deg); box-shadow: 0 0 72px #a020f099; }
 
 .fade-in { opacity: 0; transform: translateY(30px); animation: fadeInUp 0.8s forwards; }
@@ -157,7 +195,12 @@ p { color: #bcbcbc; font-size: 1.1rem; margin-bottom: 25px; line-height: 1.6; te
   .hero__image img { max-width: 260px; } .hero__content { max-width: 100%; }
   nav { flex-direction: column; gap: 15px; } .nav__links { gap: 1.5rem; flex-wrap: wrap; justify-content: center; }
   .service-card { width: 220px; height: 340px; } .service-card img { height: 140px; }
-  .close-menu { top: 20px; right: 20px; font-size: 2rem; }
+  
+  .menu-controls { top: 15px; right: 4vw; gap: 10px; padding: 8px 15px; }
+  .close-menu { font-size: 1.8rem !important; }
+  .view-label { font-size: 0.8rem; }
+  .carousel-track.grid-view { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)) !important; padding: 100px 4vw 50px !important; gap: 20px !important; }
+  .carousel-track.grid-view .service-card { min-height: 320px !important; }
 }
 @media (max-width: 576px) {
   .hero { padding-top: 20px; } .hero__name { font-size: 2.5rem; padding-bottom: 10px; }
