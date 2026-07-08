@@ -14,13 +14,9 @@ window.addEventListener("DOMContentLoaded", () => {
     }, 3000);
   }
 
-  // ==========================================
-  // LOGIC XỬ LÝ DROPDOWN & ĐIỀU KHIỂN TỐC ĐỘ 
-  // ==========================================
   const servicesToggle = document.getElementById('servicesToggle');
   const megaMenu = document.getElementById('servicesDropdown');
   const closeBtn = document.getElementById('closeMenu');
-  const track = document.querySelector('.carousel-track');
   
   function closeMegaMenu() {
     if(megaMenu) megaMenu.classList.remove('show');
@@ -41,121 +37,165 @@ window.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  // ==========================================
+  // THUẬT TOÁN 60FPS - KHÔNG BAO GIỜ KHỰNG
+  // ==========================================
   const cards = document.querySelectorAll('.service-card');
-  let activeIndex = 0; 
-  let autoRotateInterval;
-  let delayTimeout;
-  let hoverCardTimeout;
+  let currentPos = 0;        
+  let targetPos = 0;         
+  let isLocked = false;      
+  let hoveredCardIndex = -1; // Lưu vị trí thẻ đang được trỏ chuột
+  let hoverTimeouts = [];
 
-  // Hàm update vị trí thẻ và KÈM THEO truyền biến tốc độ (duration, easing) xuống CSS
-  function updateCarousel(duration = '2s', easing = 'linear') {
-    if (track) {
-      track.style.setProperty('--trans-dur', duration);
-      track.style.setProperty('--trans-ease', easing);
+  const autoSpinSpeed = 0.0012; // Tốc độ trôi tự do (Cực kỳ chậm và mượt)
+  const maxSpinSpeed = 0.04;    // Giới hạn vận tốc: Chống xoay giật cục
+  const lerpFactor = 0.03;      // Gia tốc bám đích
+
+  function renderCarousel() {
+    let isCenteredAndHovered = false;
+
+    // KHI THẺ VÀO GIỮA & CÒN BỊ HOVER -> Mới đứng yên cho khách đọc
+    if (hoveredCardIndex !== -1) {
+      let d = Math.abs(currentPos - hoveredCardIndex);
+      if (d > cards.length / 2) d = cards.length - d;
+      if (d < 0.05) isCenteredAndHovered = true; 
     }
 
-    cards.forEach((card, i) => {
-      card.classList.remove('active');
-      let offset = i - activeIndex;
-      if (offset < -5) offset += cards.length;
-      if (offset > 4) offset -= cards.length;
+    // NẾU KHÔNG BỊ KHÓA & KHÔNG PHẢI ĐANG ĐỌC THẺ GIỮA -> Cứ trôi liên tiếp
+    if (!isLocked && !isCenteredAndHovered) {
+      currentPos += autoSpinSpeed;
+      targetPos = currentPos;
+    } 
+    // NẾU BỊ KHÓA -> Xoay thẻ mục tiêu vào giữa
+    else if (isLocked) {
+      let diff = targetPos - currentPos;
+      
+      // Chọn đường ngắn nhất
+      if (diff > cards.length / 2) diff -= cards.length;
+      if (diff < -cards.length / 2) diff += cards.length;
 
-      if (offset === 0) {
-        card.style.transform = `translateX(0) scale(1)`;
-        card.style.opacity = '1';
-        card.style.zIndex = '5';
-        card.style.filter = 'blur(0px)';
-        card.classList.add('active'); 
-      } else if (offset === -1) {
-        card.style.transform = `translateX(-115%) scale(0.85)`;
-        card.style.opacity = '0.8';
-        card.style.zIndex = '4';
-        card.style.filter = 'blur(1.5px)'; 
-      } else if (offset === 1) {
-        card.style.transform = `translateX(115%) scale(0.85)`;
-        card.style.opacity = '0.8';
-        card.style.zIndex = '4';
-        card.style.filter = 'blur(1.5px)';
-      } else if (offset === -2) {
-        card.style.transform = `translateX(-210%) scale(0.7)`;
-        card.style.opacity = '0.5';
-        card.style.zIndex = '3';
-        card.style.filter = 'blur(3px)';
-      } else if (offset === 2) {
-        card.style.transform = `translateX(210%) scale(0.7)`;
-        card.style.opacity = '0.5';
-        card.style.zIndex = '3';
-        card.style.filter = 'blur(3px)';
+      let step = diff * lerpFactor;
+      
+      // ĐẶT MỨC BÃO HÒA: Ép tốc độ không được vượt quá maxSpinSpeed
+      if (step > maxSpinSpeed) step = maxSpinSpeed;
+      if (step < -maxSpinSpeed) step = -maxSpinSpeed;
+
+      currentPos += step;
+
+      // Khi thẻ đã vào chính giữa tâm
+      if (Math.abs(diff) < 0.005) {
+        currentPos = targetPos; 
+        isLocked = false; // Mở khóa ngay để sẵn sàng nhận lệnh mới
+      }
+    }
+
+    // Vòng lặp vô tận (nối circle)
+    if (currentPos >= cards.length) { currentPos -= cards.length; targetPos -= cards.length; }
+    if (currentPos < 0) { currentPos += cards.length; targetPos += cards.length; }
+
+    // Tính toán CSS
+    cards.forEach((card, i) => {
+      let offset = i - currentPos;
+      if (offset > cards.length / 2) offset -= cards.length;
+      if (offset < -cards.length / 2) offset += cards.length;
+      
+      let absOffset = Math.abs(offset);
+      let sign = Math.sign(offset);
+      let x = 0, scale = 1, opacity = 1, blur = 0, zIndex = 5;
+
+      if (absOffset <= 1) {
+        x = absOffset * 110; 
+        scale = 1 - (absOffset * 0.2); 
+        opacity = 1 - (absOffset * 0.2); 
+        blur = absOffset * 1; 
+        zIndex = 5 - absOffset; 
+      } else if (absOffset <= 2) {
+        let t = absOffset - 1; 
+        x = 110 + (t * 90); 
+        scale = 0.8 - (t * 0.2); 
+        opacity = 0.8 - (t * 0.3); 
+        blur = 1 + (t * 2); 
+        zIndex = 4 - t; 
       } else {
-        card.style.transform = `translateX(${offset > 0 ? 300 : -300}%) scale(0.5)`;
-        card.style.opacity = '0';
-        card.style.zIndex = '1';
+        let t = Math.min(absOffset - 2, 1);
+        x = 200 + (t * 50); 
+        scale = 0.6 - (t * 0.2); 
+        opacity = 0.5 - (t * 0.5); 
+        blur = 3 + (t * 2);
+        zIndex = 3 - t;
+      }
+
+      card.style.transform = `translateX(${sign * x}%) scale(${scale})`;
+      card.style.opacity = Math.max(0, opacity);
+      card.style.filter = `blur(${blur}px)`;
+      card.style.zIndex = Math.round(zIndex);
+
+      // Thêm hiệu ứng phát sáng cho thẻ đang ở tâm
+      if (absOffset < 0.3 && isCenteredAndHovered) {
+         card.classList.add('active');
+      } else {
+         card.classList.remove('active');
       }
     });
+
+    requestAnimationFrame(renderCarousel);
   }
 
-  // Auto xoay cực êm, không bị dừng khựng
-  function startAutoRotate() {
-    clearInterval(autoRotateInterval);
-    updateCarousel('2s', 'linear'); // Setup tốc độ mượt trước khi xoay
-    autoRotateInterval = setInterval(() => {
-      activeIndex = (activeIndex + 1) % cards.length;
-      updateCarousel('2s', 'linear'); // Liên tục xoay đều mỗi 2 giây
-    }, 2000);
-  }
+  requestAnimationFrame(renderCarousel);
 
-  function stopAutoRotate() {
-    clearInterval(autoRotateInterval);
-    clearTimeout(delayTimeout);
-  }
-
-  updateCarousel();
-  startAutoRotate();
-
-  // Bấm Mũi Tên: Chuyển thẻ "giật cục" (Thời gian 0.4s)
-  document.querySelector('.next-arrow').addEventListener('click', (e) => {
-    e.stopPropagation(); 
-    activeIndex = (activeIndex + 1) % cards.length;
-    updateCarousel('0.4s', 'cubic-bezier(0.25, 0.8, 0.25, 1)'); 
-  });
-  
-  document.querySelector('.prev-arrow').addEventListener('click', (e) => {
-    e.stopPropagation(); 
-    activeIndex = (activeIndex - 1 + cards.length) % cards.length;
-    updateCarousel('0.4s', 'cubic-bezier(0.25, 0.8, 0.25, 1)');
-  });
-
-  // Sự kiện Hover cho từng THẺ (Chờ 1500ms -> Kéo thẻ ra giữa với 1.5s tốc độ xoay)
+  // ==========================================
+  // XỬ LÝ HOVER 1.5s THÔNG MINH
+  // ==========================================
   cards.forEach((card, index) => {
     card.addEventListener('mouseenter', () => {
-      hoverCardTimeout = setTimeout(() => {
-        if (activeIndex !== index) {
-          activeIndex = index;
-          updateCarousel('1.5s', 'ease-in-out'); 
+      hoveredCardIndex = index;
+      
+      hoverTimeouts.forEach(clearTimeout);
+      hoverTimeouts = [];
+
+      if (isLocked) return; // Nếu hệ thống đang bận xoay thẻ khác, bỏ qua
+
+      let timeout = setTimeout(() => {
+        let d = Math.abs(currentPos - index);
+        if (d > cards.length / 2) d = cards.length - d;
+        
+        // Sau 1.5s, nếu thẻ chưa ở tâm thì ra lệnh xoay
+        if (d > 0.1 && !isLocked) {
+          isLocked = true;
+          let rawDiff = index - currentPos;
+          if (rawDiff > cards.length / 2) rawDiff -= cards.length;
+          if (rawDiff < -cards.length / 2) rawDiff += cards.length;
+          targetPos = currentPos + rawDiff;
         }
-      }, 1500); // <-- Delay chính xác 1500ms
+      }, 1500);
+      hoverTimeouts.push(timeout);
     });
 
     card.addEventListener('mouseleave', () => {
-      clearTimeout(hoverCardTimeout);
+      hoveredCardIndex = -1; // Hủy trạng thái đọc thẻ
+      hoverTimeouts.forEach(clearTimeout);
+      hoverTimeouts = [];
     });
   });
 
-  // Tạm dừng khi đưa chuột vào Menu & Tắt chế độ trôi êm
-  if (megaMenu) {
-    megaMenu.addEventListener('mouseenter', () => {
-      stopAutoRotate();
-      // Ngay khi hover vào menu, đưa tốc độ về mặc định 0.4s để các thẻ phanh lại đứng yên
-      if(track) {
-        track.style.setProperty('--trans-dur', '0.4s');
-        track.style.setProperty('--trans-ease', 'ease-out');
-      }
-    });
-
-    megaMenu.addEventListener('mouseleave', () => {
-      delayTimeout = setTimeout(() => {
-        startAutoRotate(); // Trở lại quỹ đạo trôi êm 2s
-      }, 1000); 
-    });
+  // ==========================================
+  // XỬ LÝ MŨI TÊN (Cộng dồn mượt mà)
+  // ==========================================
+  function moveNext() {
+    if (!isLocked) targetPos = Math.round(currentPos);
+    targetPos += 1;
+    isLocked = true;
   }
+  function movePrev() {
+    if (!isLocked) targetPos = Math.round(currentPos);
+    targetPos -= 1;
+    isLocked = true;
+  }
+
+  document.querySelector('.next-arrow').addEventListener('click', (e) => {
+    e.stopPropagation(); moveNext();
+  });
+  document.querySelector('.prev-arrow').addEventListener('click', (e) => {
+    e.stopPropagation(); movePrev();
+  });
 });
