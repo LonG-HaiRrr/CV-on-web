@@ -212,3 +212,64 @@ p { color: #bcbcbc; font-size: 1.1rem; margin-bottom: 25px; line-height: 1.6; te
   .read-more { font-size: 0.8rem; padding: 6px 16px; margin-bottom: 10px;}
   .slider-arrow { width: 40px; height: 40px; font-size: 1.2rem; } .prev-arrow { left: 2vw; } .next-arrow { right: 2vw; }
 }
+
+/* =========================================
+   CSS CHO MODAL CV (DROP BOX)
+========================================= */
+.cv-modal-overlay {
+  position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+  background: rgba(10, 8, 18, 0.85); 
+  backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0; visibility: hidden;
+  transition: all 0.4s ease-in-out; 
+  z-index: 9999; /* Luôn nổi cao nhất để không bị đè */
+}
+
+.cv-modal-overlay.show { 
+  opacity: 1; visibility: visible; 
+}
+
+.cv-modal-content {
+  width: 90%; height: 90%; /* Chỉnh 90% giao diện như yêu cầu */
+  background: #211b38; border-radius: 14px;
+  display: flex; flex-direction: column; overflow: hidden;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.8);
+  border: 1px solid #433b6f;
+  transform: translateY(30px); transition: transform 0.4s ease;
+}
+
+.cv-modal-overlay.show .cv-modal-content { 
+  transform: translateY(0); 
+}
+
+.cv-modal-header {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 15px 25px; background: #161223; border-bottom: 1px solid #433b6f;
+}
+
+.cv-modal-title { color: #fff; font-size: 1.2rem; font-weight: 700; }
+.cv-modal-actions { display: flex; align-items: center; gap: 20px; }
+
+.cv-download-real-btn {
+  padding: 8px 20px; font-size: 0.95rem; display: flex; align-items: center; gap: 8px;
+}
+
+.close-cv-btn {
+  background: none; border: none; color: #fff; font-size: 2rem;
+  cursor: pointer; transition: 0.3s; padding: 0; display: flex; align-items: center;
+}
+
+.close-cv-btn:hover { color: #ff4b69; transform: scale(1.1) rotate(90deg); }
+
+/* Vùng hiển thị file pdf */
+.cv-modal-content iframe {
+  width: 100%; flex-grow: 1; border: none; background: #fff;
+}
+
+/* Tinh chỉnh nhỏ cho modal trên điện thoại */
+@media (max-width: 768px) {
+  .cv-modal-content { width: 95%; height: 95%; }
+  .cv-modal-title { display: none; }
+  .cv-download-real-btn { padding: 6px 15px; font-size: 0.85rem; }
+}

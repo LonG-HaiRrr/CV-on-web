@@ -76,7 +76,7 @@
 
       <div class="hero__btns fade-in delay-4">
         <a href="#" class="btn hire-btn">Hire Me</a>
-        <a href="#" class="btn cv-btn">Download Cv</a>
+        <a href="#" class="btn cv-btn" id="openCvModal">Vỉew My Cv</a>
       </div>
       <div class="hero__social fade-in delay-4">
         <a href="https://github.com/LonG-HaiRrr"  target="_blank"><i class="fa-brands fa-github"></i></a>
@@ -88,6 +88,23 @@
       <img src="profile.png" alt="Profile" />
     </div>
   </section>
+
+  <div class="cv-modal-overlay" id="cvModal">
+    <div class="cv-modal-content">
+      <div class="cv-modal-header">
+        <span class="cv-modal-title">Hồ Sơ Năng Lực (CV)</span>
+        <div class="cv-modal-actions">
+          <a href="CV Phạm Việt Long.pdf" download="CV Phạm Việt Long.pdf" class="btn cv-download-real-btn">
+            <i class="fa-solid fa-download"></i> Tải xuống
+          </a>
+          <button class="close-cv-btn" id="closeCvModal"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+      </div>
+      <iframe src="CV Phạm Việt Long.pdf" frameborder="0">
+        <p>Trình duyệt của bạn không hỗ trợ xem PDF trực tiếp. <a href="CV Phạm Việt Long.pdf">Tải xuống PDF tại đây</a>.</p>
+      </iframe>
+    </div>
+  </div>
 
   <script src="https://kit.fontawesome.com/5fe94cd70e.js" crossorigin="anonymous"></script> 
   <script src="script.js"></script>

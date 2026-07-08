@@ -244,4 +244,33 @@ window.addEventListener("DOMContentLoaded", () => {
   document.querySelector('.prev-arrow').addEventListener('click', (e) => {
     e.stopPropagation(); movePrev();
   });
+
+  // ==========================================
+  // XỬ LÝ SỰ KIỆN CHO MODAL CV
+  // ==========================================
+  const openCvModalBtn = document.getElementById('openCvModal');
+  const cvModal = document.getElementById('cvModal');
+  const closeCvModalBtn = document.getElementById('closeCvModal');
+
+  if (openCvModalBtn && cvModal) {
+    openCvModalBtn.addEventListener('click', (e) => {
+      e.preventDefault(); // Ngăn trình duyệt nhảy về đầu trang
+      cvModal.classList.add('show');
+    });
+  }
+
+  if (closeCvModalBtn) {
+    closeCvModalBtn.addEventListener('click', () => {
+      cvModal.classList.remove('show');
+    });
+  }
+
+  // Đóng modal khi click ra vùng đen bên ngoài
+  if (cvModal) {
+    cvModal.addEventListener('click', (e) => {
+      if (e.target === cvModal) {
+        cvModal.classList.remove('show');
+      }
+    });
+  }
 });
