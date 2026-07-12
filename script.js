@@ -5,7 +5,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
   const bgImages = ['img_body/1.jpg', 'img_body/1.png'];
   const bgSlider = document.querySelector('.bg-slider');
-  let currentBgIndex = 0;
+  let currentBgIndex = 1;
   if (bgSlider && bgImages.length > 0) {
     bgSlider.style.backgroundImage = `url('${bgImages[currentBgIndex]}')`;
     setInterval(() => {
