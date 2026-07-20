@@ -87,12 +87,12 @@ window.addEventListener("DOMContentLoaded", () => {
       let currentX = e.touches[0].clientX;
       let deltaX = currentX - lastX;
       
-      currentPos -= deltaX * 0.015; 
+      currentPos -= deltaX * 0.00009; 
       
       let now = Date.now();
       let dt = now - lastTime;
       if (dt > 0) {
-        momentum = -(deltaX / dt) * 0.5; 
+        momentum = -(deltaX / dt) * 0.05; 
       }
       
       lastX = currentX; lastTime = now;
