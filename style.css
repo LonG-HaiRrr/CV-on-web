@@ -177,7 +177,7 @@ p { color: #bcbcbc; font-size: 1.1rem; margin-bottom: 25px; line-height: 1.6; te
   .hero__name { font-size: 3.2rem; } h1 { font-size: 2.2rem; } h2 { font-size: 1.3rem; }
   .hero__image img { max-width: 260px; } .hero__content { max-width: 100%; }
   nav { flex-direction: column; gap: 15px; } .nav__links { gap: 1.5rem; flex-wrap: wrap; justify-content: center; }
-  .service-card { width: 220px; height: 340px; } .service-card img { height: 140px; }
+  .service-card { width: 220px; height: 340px; margin-top: 50px !important;} .service-card img { height: 140px; }
   .menu-controls { top: 15px; right: 4vw; gap: 10px; padding: 8px 15px; } .close-menu { font-size: 1.8rem !important; } .view-label { font-size: 0.8rem; }
   .carousel-track.grid-view { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)) !important; padding: 100px 4vw 50px !important; gap: 20px !important; }
   .carousel-track.grid-view .service-card { min-height: 320px !important; }
@@ -187,7 +187,8 @@ p { color: #bcbcbc; font-size: 1.1rem; margin-bottom: 25px; line-height: 1.6; te
   h1 { font-size: 1.8rem; } h2 { font-size: 1.1rem; margin-bottom: 10px; }
   p { font-size: 0.95rem; margin-bottom: 20px; } .hero__image img { max-width: 220px; border-width: 5px; }
   .nav__links { gap: 1rem; font-size: 1rem; } .btn { padding: 10px 24px; font-size: 0.9rem; } .social-icon { font-size: 1.2rem; padding: 0.5em; }
-  .service-card { width: 200px; height: 300px; border-radius: 10px; }
+  .carousel-track.grid-view .service-card {margin-top: 50px !important;}
+  .service-card { width: 200px; height: 300px; border-radius: 10px; margin-top: 50px !important;}
   .service-card h3 { font-size: 1.2rem; margin: 10px 15px 5px;} .service-card p { font-size: 0.8rem; margin: 5px 15px 10px;}
   .read-more { font-size: 0.8rem; padding: 6px 16px; margin-bottom: 10px;}
   .slider-arrow { width: 40px; height: 40px; font-size: 1.2rem; } .prev-arrow { left: 2vw; } .next-arrow { right: 2vw; }
