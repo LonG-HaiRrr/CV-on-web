@@ -185,7 +185,9 @@ p { color: #bcbcbc; font-size: 1.1rem; margin-bottom: 25px; line-height: 1.6; te
 @media (max-width: 576px) {
   .hero { padding-top: 20px; } .hero__name { font-size: 2.5rem; padding-bottom: 10px; }
   h1 { font-size: 1.8rem; } h2 { font-size: 1.1rem; margin-bottom: 10px; }
-  p { font-size: 0.95rem; margin-bottom: 20px; } .hero__image img { max-width: 220px; border-width: 5px; }
+  p { font-size: 0.95rem; margin-bottom: 20px; } .hero__image img { max-width: 290px; border-width: 5px; }
+  .hero__image.fade-in-right{margin-top: 50px !important;}
+  .fade-in-right { opacity: 0; transform: translateX(355px); animation: fadeInRight 2s .55s forwards; }
   .nav__links { gap: 1rem; font-size: 1rem; } .btn { padding: 10px 24px; font-size: 0.9rem; } .social-icon { font-size: 1.2rem; padding: 0.5em; }
   .carousel-track.grid-view .service-card {margin-top: 50px !important;}
   .service-card { width: 200px; height: 300px; border-radius: 10px; margin-top: 50px !important;}
